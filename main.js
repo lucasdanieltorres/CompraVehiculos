@@ -1,138 +1,126 @@
-let marca = 0;
-let modelo = 0;
-let vehiculo = "";
-let precio = 0;
-let precioSeguro=0;
 // let costosPatentamiento=0;
 // let precioInscripcion=0;
+let precioTotal=0;
+let pagoMensual=0;
 
+/* Los datos correspondientes a los vehiculos fueron cargados en un array de objetos.*/
+const vehiculos = [
+    { id: 1,marca: "AUDI",modelo: "A1", anio: 2020, kilometraje: 50000, precio: 3500000},
+    { id: 2,marca: "AUDI",modelo: "Q5", anio: 2013, kilometraje: 92000, precio: 6000000},
+    { id: 3,marca: "ALFA ROMEO",modelo: "MITO", anio: 2014, kilometraje: 110000, precio: 2900000},
+    { id: 4,marca: "FORD",modelo: "FOCUS", anio: 2022, kilometraje: 0, precio: 4000000},
+    { id: 5,marca: "FORD",modelo: "MAVERICK", anio: 2022, kilometraje: 0, precio: 6900000}
+];
 
 comprarVehiculo();
-let cotizar = confirm("¿Le gustaría cotizar un seguro para su vehículo?");
+const vehiculo = seleccionarVehiculo();
+confirmarCompra();
+let cotizar = confirm("¿Desea cotizar un seguro para su vehiculo?");
 if(cotizar) {
-    cotizarSeguro(vehiculo, precio);
+    let precioSeguro = cotizarSeguro(vehiculo.precio);
+    if (precioSeguro!=0){
+        console.log("Valor seguro contra todo riesgo para "+vehiculo.marca+" "+vehiculo.modelo+": "+ precioSeguro);
+    }
 }
-let financiar = confirm("¿Desea financiar su vehículo?")
-if(financiar) {
-    calcularFinanciacion(precio);
+
+// APLICAMOS EL IVA AL VALOR DE LA UNIDAD
+const aplicarIva = (precio) => {return precio*1.21};
+precioTotal = aplicarIva(vehiculo.precio);
+
+//FINANCIACION (FALTA CORREGIR FORMULAS.)
+let financiar = confirm("¿Desea estimar la financiacion para la unidad seleccionada?");
+if (financiar) {
+    pagoMensual = calcularFinanciacion(precioTotal);
+    console.log("Valor de la cuota: "+pagoMensual);
 }
+
+
+
+
 function comprarVehiculo() {
-    do{
-        marca = parseInt(prompt("Seleccione el número de marca:\n1-Peugeot\n2-Ford\n3-Toyota\n"));
-    }
-    while(Number.isNaN(marca) || marca<1 || marca>3);
-
-    /* Para elegir el modelo usé dos switch's anidados, el primero determina la marca, 
-    el segundo el modelo dentro de cada una */
-
-    switch (marca) {
-        case 1:
-            vehiculo = "Peugeot ";
-            do{
-                modelo = parseInt(prompt("Seleccione el número de modelo:\n1-206\n2-207\n3-307\n4-308"));
-            }
-            while (Number.isNaN(modelo) || modelo<1 || modelo>4);
-            
-            switch (modelo) {
-                case 1:
-                    vehiculo+="206";
-                    precio=980000;
-                    break;
-                case 2:
-                    vehiculo+="207";
-                    precio=1270000;
-                    break;
-                case 3:
-                    vehiculo+="307";
-                    precio=1400000;
-                    break;
-                case 4:
-                    vehiculo+="308";
-                    precio=3050000;
-                break;
-                default:
-                    alert("El modelo ingresado es incorrecto");
-                    break;
-            }
-            break;
-    
-        case 2:
-            vehiculo = "Ford ";
-            do{
-                modelo = Number(prompt("Seleccione el modelo:\n1-Fiesta\n2-Focus\n3-Ranger\n4-Raptor"));
-            }
-            while (Number.isNaN(modelo) || modelo<1 || modelo>4)
-
-            switch (modelo) {
-                case 1:
-                    vehiculo+="Fiesta";
-                    precio=2200000;
-                    break;
-                case 2:
-                    vehiculo+="Focus";
-                    precio=2700000;
-                    break;
-                case 3:
-                    vehiculo+="Ranger";
-                    precio=6000000;
-                    break;
-                case 4:
-                    vehiculo+="Raptor";
-                    precio=15000000;
-                break;
-
-                /* El default no seria necesario puesto que el Do.. while valida que no se ingrese una opcion incorrecta. 
-                Elegi dejarlo por una cuestion de buenas practicas.*/
-                default:
-                    alert("El modelo ingresado es incorrecto");
-                    break;
-            }
-            break;
-    }
-    console.log("Vehiculo seleccionado: "+vehiculo +" Precio: "+precio);
+    alert("Bienvenido, presione ACEPTAR para ver el listado de vehiculos");
+    listarVehiculos();
 }
 
-function calcularFinanciacion(precio) {
-    let precioConIntereses = precio;
-    let tasaInteres = 1.60;
-    let precioFinanciadoTotal=0;
-    let cantidadCuotas = parseInt(prompt("¿En cuantas cuotas le gustaría financiar su vehículo?\n24\n36\n48\n72"));
-    let realizarAdelanto = confirm("¿Desea realizar un adelanto en efectivo?");
-    if (realizarAdelanto) {
-        let adelanto = Number(prompt("Ingrese el monto total del adelanto en efectivo: "));
-        precioConIntereses = precio - adelanto;
+/* 
+NOTA: calcularFinanciacion aun funciona con irregularidades, debe corregirse.
+
+calcularFinanciacion toma el valor total del vehiculo y lo aplica en la siguiente formula:
+
+    {A=P*(r(1+r)^{n})/((1+r)^{n}-1)
+
+A = el pago mensual.
+P = el capital principal
+r = la tasa de interés por mes, que es igual a la tasa de interés anual dividida entre 12
+n = el número total de meses
+
+*/
+
+function calcularFinanciacion (precioTotal) {
+    const tasaAnual = 0.60;
+    const tasaMensual = tasaAnual/12;
+    let anticipo = confirm("¿Desea realizar un anticipo en efectivo?");
+    if (anticipo) {
+        pagoInicial = Number(prompt("Ingrese el valor del anticipo en efectivo\nSe recomienda anticipar, al menos, el 40% del valor total de la unidad"));
+        precioTotal-=pagoInicial;
     }
-    
-    for ( let i = 1 ; i <= cantidadCuotas/12 ; i++) {
-        precioConIntereses = precioConIntereses*tasaInteres;
-        // console.log("Año "+i+" - Precio: "+ precioConIntereses);
-        precioFinanciadoTotal+= precioConIntereses;
-    }
-    let valorCuota= precioFinanciadoTotal/cantidadCuotas;
-    console.log("Tasa Efectiva Anual: 60%");
-    console.log("Valor final de la cuota "+valorCuota);
+    let cuotas = parseInt(prompt("¿En cuantas cuotas desea financiar el monto?\nMinimo:6     Maximo:72"));
+    const valorCuota = precioTotal * (tasaMensual* Math.pow((1+tasaMensual),cuotas)) / (Math.pow((1+tasaMensual),cuotas)-1);
+    return valorCuota;
 }
 
-function cotizarSeguro(vehiculo, precio) {
-    let precioSeguro=0;
-    const seguro = 0.0037;
-    const gamaMedia = 1750;
-    const gamaAlta = 2700;
-    if(precio<=1000000) {
-        precioSeguro=4700;
+// listarVehiculos recorre cada objeto del array y lo imprime, dejando ver el listado completo de vehiculos.
+function listarVehiculos() {
+    vehiculos.forEach((vehiculo) => {
+        console.log(vehiculo)
+    });
+}  
+
+
+/* la funcion de seleccionarVehiculo trabaja con el ID de cada unidad, y retorna el objeto correspondiente al vehiculo */
+function seleccionarVehiculo() {
+    vehiculoSeleccionado = parseInt(prompt("Ingrese el ID del vehiculo de su elección."));
+    while(vehiculoSeleccionado<1 || vehiculoSeleccionado>5) {
+        alert("ID Erróneo, inténtelo de nuevo.");
+        console.clear();
+        listarVehiculos();
+        seleccionarVehiculo();
     }
-    else if (precio>1000000 && precio<1800000){
-        precioSeguro = (precio*seguro);
-    }
-    else if (precio>=1800000 && precio<3200000) {
-        precioSeguro = (precio*seguro)+gamaMedia;
-    }
-    else if (precio>=3200000 && precio<8000000) {
-        precioSeguro = (precio*seguro)+gamaAlta;
-    }
-    else {
-        alert("Vehículo de alto valor. Por favor, solicite una asesoría personalizada para cotizar");
+    const resultado = vehiculos.find(vehiculo => vehiculo.id === vehiculoSeleccionado);
+    console.clear();
+    console.log("Vehiculo seleccionado: ");
+    console.log(resultado);
+    return resultado;
+}
+
+function confirmarCompra() {
+    let confirmarCompra = confirm("¿Desea adquirir "+vehiculo.marca+" "+vehiculo.modelo+" por un valor de: "+vehiculo.precio+"?")
+    if(!confirmarCompra) {
         return 0;
     }
-    console.log("El precio de un seguro completo para su "+vehiculo+" es de: "+precioSeguro);
+}
+
+function cotizarSeguro (precio) {
+
+    const porcentajePoliza = 0.0037;
+    const seguroBasico = 4050;  
+    let precioSeguro=0;
+
+    /*  para todos los vehiculos con valor mayor a 1M y menor a 5M se cobra 
+        un seguro con un valor del 0.37% del valor del auto.                */
+    if(precio>1000000 && precio<5000000) {
+        precioSeguro = precio*porcentajePoliza;
+    }
+
+    // para los que valen menos de 1M se establece un precio general de $4.050
+    else if (precio<1000000) {
+        precioSeguro = seguroBasico;
+    }
+
+    // Los que valgan mas de 5M deben solicitar atencion personalizada por el alto valor del vehiculo
+    else {
+        alert("Vehiculo de alto valor, solicite asesoría personalizada para cotizar.");
+        return 0;
+    }
+    return precioSeguro;
 }
