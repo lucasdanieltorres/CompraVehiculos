@@ -14,7 +14,7 @@ const vehiculos = [
 
 comprarVehiculo();
 const vehiculo = seleccionarVehiculo();
-confirmarCompra();
+let confimarOperacion = confirmarCompra();
 let cotizar = confirm("¿Desea cotizar un seguro para su vehiculo?");
 if(cotizar) {
     let precioSeguro = cotizarSeguro(vehiculo.precio);
@@ -79,8 +79,8 @@ function listarVehiculos() {
 
 /* la funcion de seleccionarVehiculo trabaja con el ID de cada unidad, y retorna el objeto correspondiente al vehiculo */
 function seleccionarVehiculo() {
-    vehiculoSeleccionado = parseInt(prompt("Ingrese el ID del vehiculo de su elección."));
-    while(vehiculoSeleccionado<1 || vehiculoSeleccionado>5) {
+    vehiculoSeleccionado = prompt("Ingrese el ID del vehiculo de su elección.");
+    while (vehiculoSeleccionado == "" || vehiculoSeleccionado<1 || vehiculoSeleccionado>5) {
         alert("ID Erróneo, inténtelo de nuevo.");
         console.clear();
         listarVehiculos();
