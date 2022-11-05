@@ -27,11 +27,8 @@ if(cotizar) {
 const aplicarIva = (precio) => {return precio*1.21};
 precioTotal = aplicarIva(vehiculo.precio);
 
-//FINANCIACION (FALTA CORREGIR FORMULAS.)
 let financiar = confirm("¿Desea estimar la financiacion para la unidad seleccionada?");
 if (financiar) {
-    pagoMensual = calcularFinanciacion(precioTotal);
-    console.log("Valor de la cuota: "+pagoMensual);
 }
 
 
@@ -42,37 +39,11 @@ function comprarVehiculo() {
     listarVehiculos();
 }
 
-/* 
-NOTA: calcularFinanciacion aun funciona con irregularidades, debe corregirse.
-
-calcularFinanciacion toma el valor total del vehiculo y lo aplica en la siguiente formula:
-
-    {A=P*(r(1+r)^{n})/((1+r)^{n}-1)
-
-A = el pago mensual.
-P = el capital principal
-r = la tasa de interés por mes, que es igual a la tasa de interés anual dividida entre 12
-n = el número total de meses
-
-*/
-
-function calcularFinanciacion (precioTotal) {
-    const tasaAnual = 0.60;
-    const tasaMensual = tasaAnual/12;
-    let anticipo = confirm("¿Desea realizar un anticipo en efectivo?");
-    if (anticipo) {
-        pagoInicial = Number(prompt("Ingrese el valor del anticipo en efectivo\nSe recomienda anticipar, al menos, el 40% del valor total de la unidad"));
-        precioTotal-=pagoInicial;
-    }
-    let cuotas = parseInt(prompt("¿En cuantas cuotas desea financiar el monto?\nMinimo:6     Maximo:72"));
-    const valorCuota = precioTotal * (tasaMensual* Math.pow((1+tasaMensual),cuotas)) / (Math.pow((1+tasaMensual),cuotas)-1);
-    return valorCuota;
-}
 
 // listarVehiculos recorre cada objeto del array y lo imprime, dejando ver el listado completo de vehiculos.
 function listarVehiculos() {
     vehiculos.forEach((vehiculo) => {
-        console.log(vehiculo)
+        console.log("ID: "+vehiculo.id,"VEHICULO: "+vehiculo.marca,vehiculo.modelo,"PRECIO: "+ vehiculo.precio,"AÑO "+vehiculo.anio,"KM: "+ vehiculo.kilometraje);
     });
 }  
 
@@ -80,7 +51,7 @@ function listarVehiculos() {
 /* la funcion de seleccionarVehiculo trabaja con el ID de cada unidad, y retorna el objeto correspondiente al vehiculo */
 function seleccionarVehiculo() {
     vehiculoSeleccionado = parseInt(prompt("Ingrese el ID del vehiculo de su elección."));
-    while(vehiculoSeleccionado<1 || vehiculoSeleccionado>5) {
+    while( Number.isNaN(vehiculoSeleccionado) || vehiculoSeleccionado<1 || vehiculoSeleccionado>5) {
         alert("ID Erróneo, inténtelo de nuevo.");
         console.clear();
         listarVehiculos();
