@@ -1,0 +1,141 @@
+body {
+    background-image: url("/img/background.webp");
+}
+
+.logoTitulo {
+    height: 13vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#logo {
+    width: 80px;
+    height: 80px;
+    margin: 10px;
+}
+
+#tituloHeader {
+    font-size: 30px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 10px;
+}
+
+main {
+    width: 90vw;
+    display: flex;
+    justify-content: center;
+}
+
+.catalogo {
+    border: 01px solid black;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 15px;
+    padding: 10px;
+}
+
+.card {
+    margin: 10px;
+    display: flex;
+    flex-flow: row;
+    border: 01px solid black
+}
+
+.card img {
+    width: 260px;
+    height: 192px ;
+    margin: 02px;
+}
+
+#cotizador {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    width: 350px;
+    height: fit-content;
+    border: 02px solid #303030;
+    border-radius: 05px;
+    font-size: 16px;
+}
+
+.payment {
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    width: 350px;
+    height: 350px;
+    border: 02px solid #303030;
+    border-radius: 05px;
+    font-size: 16px;
+}
+
+#cotizador h4 {
+    font-size: 14px;
+}
+
+#seleccionado {
+    margin: 05px;
+    font-weight: 600;
+}
+
+.botonCatalogo {
+    margin: 05px 00px 05px 00px;
+    width: 80%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    border-radius: 03px;
+    background-color: #303030;
+    border-color: #1f1c1c;
+}
+
+.botonCatalogo:hover {
+    background-color: #1f1c1c;
+    border-color: #1f1c1c;
+
+}
+
+.historialCuadro {
+    background-image: url("https://png.pngtree.com/thumb_back/fh260/background/20210207/pngtree-gray-simple-gradient-background-image_557031.jpg");
+    border: 01px solid #303030;
+    border-radius: 05px;
+    text-align: center;
+    width: 350px;
+    height: fit-content;
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.historial {
+    width: 98%;
+}
+.elementoHistorial {
+    width: 330px;
+    border-radius: 03px;
+    font-size: 15px;
+}
+
+.elementoHistorial p {
+    padding: 05px 00px 05px 00px;
+    border: 01px solid #1f1c1c;
+    border-radius: 05px;
+}
+#cotizadorFinanciacion {
+    width: 95%;
+    display: flex;
+    flex-flow: column wrap;
+    justify-items: center;
+    align-items: center;
+    font-size: 16px;
+}
+
+#cotizadorFinanciacion h4 {
+    font-size: 17px;
+    font-weight: 0;
+}
+

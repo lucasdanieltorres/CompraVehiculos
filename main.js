@@ -1,112 +1,95 @@
-const cuotasPorAnio = 12; 
+const cuotasPorAnio = 12;
 const tasaAnual = 0.45;
 const descuentoContado = 0.95;
-let cantidadCuotas,
-capitalInicial,
+let capitalInicial,
 pagoMensual,
 aniosFinanciacion,
 capitalFinal,
 cuotasFinales,
 cotizar,
 precioSeguro,
-financiar,
+montoTotal,
 montoAnticipo = 0;
+let arrayHistorial = [];
 
-/* TESTEADO: 11/11 23:00hs. Funcionando correctamente <3 */
+/* TESTEADO: 26/11 16:00hs. Funcionando correctamente <3 */
 
 
 /* Los datos correspondientes a los vehiculos fueron cargados en un array de objetos.*/
 
 const vehiculos = [
-    { id: 1,marca: "AUDI",modelo: "A1", anio: 2020, kilometraje: 50000, precio: 3500000},
-    { id: 2,marca: "AUDI",modelo: "Q5", anio: 2013, kilometraje: 92000, precio: 6000000},
-    { id: 3,marca: "ALFA ROMEO",modelo: "MITO", anio: 2014, kilometraje: 110000, precio: 2900000},
-    { id: 4,marca: "FORD",modelo: "FOCUS", anio: 2022, kilometraje: 0, precio: 4000000},
-    { id: 5,marca: "FORD",modelo: "MAVERICK", anio: 2022, kilometraje: 0, precio: 6900000}
+
+    {
+        id: 1,
+        marca: "AUDI",
+        modelo: "A1",
+        anio: 2020,
+        kilometraje: 50000,
+        precio: 3500000,
+        img: "/img/audi-a1.jpg"
+    },
+
+    {
+        id: 2,
+        marca: "AUDI",
+        modelo: "Q5",
+        anio: 2013,
+        kilometraje:
+        92000,
+        precio: 6000000,
+        img: "/img/audi-q5.jpg"
+
+    },
+
+    {
+        id: 3,
+        marca: "ALFA ROMEO",
+        modelo: "MITO",
+        anio: 2014,
+        kilometraje: 110000,
+        precio: 2900000,
+        img: "/img/alfa-mito.jpg"
+
+    },
+
+    {
+        id: 4,
+        marca: "FORD",
+        modelo: "FOCUS",
+        anio: 2022,
+        kilometraje: 0,
+        precio: 4000000,
+        img: "/img/ford-focus.jpg"
+
+    },
+
+    {
+        id: 5,
+        marca: "FORD",
+        modelo: "MAVERICK",
+        anio: 2022,
+        kilometraje: 0,
+        precio: 6900000,
+        img: "/img/ford-maverick.jpg"
+
+    }
 ];
 
-comprarVehiculo();
-const vehiculo = seleccionarVehiculo();
+// // APLICAMOS EL IVA AL VALOR DE LA UNIDAD
+// const aplicarIva = (precio) => {return precio*1.21};
+// vehiculo.precio = aplicarIva(vehiculo.precio);
+// // console.log("Precio del vehiculo con IVA: "+vehiculo.precio);
 
-// APLICAMOS EL IVA AL VALOR DE LA UNIDAD
-const aplicarIva = (precio) => {return precio*1.21};
-vehiculo.precio = aplicarIva(vehiculo.precio);
-console.log("Precio del vehiculo con IVA: "+vehiculo.precio);
-
-cotizar = confirm("¿Desea cotizar un seguro para su vehiculo?");
-if(cotizar) {
-    precioSeguro = cotizarSeguro(vehiculo.precio);
-    if (precioSeguro!=0){
-        console.log("Valor seguro contra todo riesgo para "+vehiculo.marca+" "+vehiculo.modelo+": $"+ precioSeguro);
-    }
-}
-
-
-//FINANCIACION
-financiar = confirm("¿Desea estimar la financiacion para la unidad seleccionada?");
-if (financiar) {
-    let anticipar = confirm("¿Desea realizar un anticipo en efectivo?");
-    if(anticipar) {
-        capitalInicial=anticipo(vehiculo.precio);
-    }
-    else {
-        capitalInicial = vehiculo.precio;
-    } 
-    cantidadCuotas = validarCuotas();
-    capitalFinal = calcularFinanciacion(capitalInicial, aniosFinanciacion);
-    console.log("Monto a financiar: $"+capitalInicial+" en "+cantidadCuotas+" cuotas\n"+"Tasa Efectiva Anual: 45%\n"+"Monto a devolver: $"+capitalFinal+" en "+cantidadCuotas+" cuotas de: $"+cuotasFinales);
-
-}
-
-let confirmarCompra = confirm("¿Desea confirmar la operación?");
-if (confirmarCompra) {
-    totalAPagar();
-}
-else {
-    alert("Operación cancelada");
-}
-
-function comprarVehiculo() {
-    alert("Bienvenido, presione ACEPTAR para ver el listado de vehiculos");
-    listarVehiculos();
-}
-
-
-
-// listarVehiculos recorre cada objeto del array y lo imprime, dejando ver el listado completo de vehiculos.
-
-function listarVehiculos() {
-    vehiculos.forEach((vehiculo) => {
-        console.log("ID: "+vehiculo.id+" "+vehiculo.marca+" "+vehiculo.modelo+" | "+vehiculo.anio+" | $"+vehiculo.precio+" | KM: "+vehiculo.kilometraje);
-    });
-}  
-
-
-/* la funcion de seleccionarVehiculo trabaja con el ID de cada unidad, y retorna el objeto correspondiente al vehiculo */
-function seleccionarVehiculo() {
-    vehiculoSeleccionado = parseInt(prompt("Ingrese el ID del vehiculo de su elección."));
-    while(vehiculoSeleccionado<1 || vehiculoSeleccionado>5 ||Number.isNaN(vehiculoSeleccionado)) {
-        alert("ID Erróneo, inténtelo de nuevo.");
-        console.clear();
-        listarVehiculos();
-        seleccionarVehiculo();
-    }
-    const resultado = vehiculos.find(vehiculo => vehiculo.id === vehiculoSeleccionado);
-    console.clear();
-    console.log("Vehiculo seleccionado: ");
-    console.log(resultado.marca+" "+resultado.modelo+" | "+resultado.anio+" | KM:"+resultado.kilometraje+" | $"+resultado.precio);
-    return resultado;
-}
 
 
 
 function cotizarSeguro (precio) {
 
     const porcentajePoliza = 0.0037;
-    const seguroBasico = 4050;  
+    const seguroBasico = 4050;
     let precioSeguro=0;
 
-    /*  para todos los vehiculos con valor mayor a 1M y menor a 5M se cobra 
+    /*  para todos los vehiculos con valor mayor a 1M y menor a 5M se cobra
         un seguro con un valor del 0.37% del valor del auto.                */
     if(precio>1000000 && precio<5000000) {
         precioSeguro = precio*porcentajePoliza;
@@ -119,33 +102,130 @@ function cotizarSeguro (precio) {
 
     /* Los que valgan mas de 5M deben solicitar atencion personalizada por el alto valor del vehiculo */
     else {
-        alert("Vehiculo de alto valor, solicite asesoría personalizada para cotizar.");
         return 0;
     }
     return precioSeguro;
 }
 
-function validarCuotas() {
-    let cantidadCuotas = 0;
-    let resto = cantidadCuotas%cuotasPorAnio;
-    cantidadCuotas = prompt("¿En cuantas cuotas desea financiar el monto?\n12\n24\n36\n48\n60\n72");
-    while(resto!=0 || cantidadCuotas<12 || cantidadCuotas>72 || Number.isNaN(cantidadCuotas)) {
-        console.error("error, ingrese una cantidad de cuotas valida");
-        cantidadCuotas = prompt("¿En cuantas cuotas desea financiar el monto?\n12\n24\n36\n48\n60\n72");
+const listarCatalogo = () => {
+    const catalogo = document.getElementById("listado");
+
+    vehiculos.forEach ( vehiculo => {
+        const div = document.createElement("div");
+            div.classList.add("card");
+            div.innerHTML +=`
+            <img src="${vehiculo.img}" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">${vehiculo.marca} ${vehiculo.modelo}</h5>
+              <p class="card-text">
+                Año: ${vehiculo.anio}
+                Km: ${vehiculo.kilometraje}
+                <h3>$${new Intl.NumberFormat('es-AR').format(vehiculo.precio)}</h3>
+              </p>
+              <button href="#" class="btn btn-primary" value="${vehiculo.id}" >Consultar</button>
+            </div>`
+        catalogo.appendChild(div);
+    } )
+}
+
+listarCatalogo();
+
+let listado = document.getElementById("listado");
+let seleccion = listado.addEventListener("click", (e) => {
+    pintarVehiculo(e.target.value);
+})
+
+function pintarVehiculo(id){
+    vehiculos.forEach( vehiculo => {
+        if (vehiculo.id == id) {
+            let seleccionado = document.getElementById("seleccionado");
+            seleccionado.innerText = `${vehiculo.marca} ${vehiculo.modelo}`
+            let precioSeleccionado = document.querySelector("#precioVehiculo span");
+            precioSeleccionado.innerText = new Intl.NumberFormat('es-AR').format(vehiculo.precio);
+            guardarVehiculoStorage(vehiculo);
+            guardarVehiculoHistorial(vehiculo);
+        }
+    });
+};
+
+//Escucho si se pide cotizacion para asegurar el vehiculo.
+
+let cotizacion = document.getElementById("cotizar");
+cotizacion.addEventListener("click", (e) => {
+    cotizarBoton(e.target.value);
+
+})
+
+function cotizarBoton (value) {
+    let polizaSeleccionado = document.getElementById("polizaVehiculo");
+    if (value === "cotizar") {
+        let vehiculoParse = JSON.parse(localStorage.getItem("vehiculo"))
+        precioSeguro = cotizarSeguro(vehiculoParse.precio);
+        if (precioSeguro!=0){
+            polizaSeleccionado.innerText = `Valor seguro: $${new Intl.NumberFormat('es-AR').format(precioSeguro)}`;
+        }
+        else {
+            polizaSeleccionado.innerText = `Vehiculo de alto valor, solicite asesoría personalizada.`;
+        }
     }
-    aniosFinanciacion = cantidadCuotas/cuotasPorAnio;
+};
+
+//Funcion que almacena en Storage.
+const guardarVehiculoStorage = (vehiculo) => {
+    localStorage.setItem("vehiculo", JSON.stringify(vehiculo));
+};
+
+
+//  Descuento por abonar en efectivo.
+
+let pagoEfectivo = document.getElementById("efectivo");
+pagoEfectivo.addEventListener("click", (e) => {
+    pagoContado(e.target.value);
+});
+
+function pagoContado (value) {
+    if (value === "efectivo") {
+        let vehiculo = JSON.parse(localStorage.getItem("vehiculo"));
+        precioOferta = vehiculo.precio*descuentoContado;
+        let precioUnidad = document.getElementById("precioVehiculo");
+        // alert(`Oferta de contado: 1 pago de: $${new Intl.NumberFormat('es-AR').format(precioOferta)}`)
+        swal({
+            text: `Oferta de contado: 1 pago de: $${new Intl.NumberFormat('es-AR').format(precioOferta)}`,
+          });
+    }
+}
+
+//  Financiacion
+
+let financiar = document.getElementById("financiar");
+financiar.addEventListener("click", (e) => {
+    financiacion(e.target.value);
+});
+
+function financiacion (value) {
+    if (value === "financiar") {
+        console.log("Financiacion calculada con exito!");
+        let vehiculo = JSON.parse(localStorage.getItem("vehiculo"));
+        let cantidadCuotas = obtenerCuotas();
+        let valorFinal = calcularFinanciacion(vehiculo.precio, cantidadCuotas);
+        console.log(valorFinal);
+        pagoMensual = valorFinal/cantidadCuotas;
+        pintarFinanciacion(cantidadCuotas, pagoMensual, valorFinal, vehiculo.precio);
+    }
+};
+
+
+function obtenerCuotas () {
+    const select = document.querySelector("#selector");
+    select.addEventListener("change", () => {
+        console.log(select.value);
+    })
+    let cantidadCuotas = select.value;
     return cantidadCuotas;
 }
 
-
-/*  
-    La formula calcularFinanciacion aplica una tasa efectiva anual del 45%, es decir, un interes compuesto. Similar a como se 
-    calcula una financiacion real, utiliza la siguiente formula:
-
-    Valor final = capital * (1+Interes)^tiempo 
-*/ 
-
-function calcularFinanciacion(capitalInicial, aniosFinanciacion) {
+function calcularFinanciacion(capitalInicial, cantidadCuotas) {
+    aniosFinanciacion = cantidadCuotas/cuotasPorAnio;
     let aux1 = 1+tasaAnual;
     let aux2 = Math.pow(aux1,aniosFinanciacion);
     let capitalFinal = capitalInicial * aux2;
@@ -153,30 +233,50 @@ function calcularFinanciacion(capitalInicial, aniosFinanciacion) {
     return capitalFinal;
 }
 
-function anticipo(montoTotal) {
-    do {
-        montoAnticipo = Number(prompt("Ingrese el monto total del anticipo:"));
-    }
-    while (montoAnticipo<=0 || montoAnticipo>vehiculo.precio || Number.isNaN(montoAnticipo));
-    montoTotal-=montoAnticipo;
-    return montoTotal;
+function pintarFinanciacion(cantidadCuotas, valorCuota, montoFinal, precioVehiculo) {
+    cantidadPagos = document.getElementById("cantidadPagos");
+    cantidadPagos.innerText = cantidadCuotas;
+
+    precioCuota = document.getElementById("valorCuota");
+    precioCuota.innerText = new Intl.NumberFormat('es-AR').format(valorCuota);
+    
+    pagoFinanciado = document.getElementById("montoFinal");
+    pagoFinanciado.innerText =new Intl.NumberFormat('es-AR').format(montoFinal);
+
+    precioUnidad = document.getElementById("precioUnidad");
+    precioUnidad.innerText = new Intl.NumberFormat('es-AR').format(precioVehiculo);
 }
 
-function totalAPagar () {
-    console.clear();
-    console.log(vehiculo.marca+" "+vehiculo.modelo+" | "+vehiculo.anio+" | KM:"+vehiculo.kilometraje+" | $"+vehiculo.precio);
-    if(financiar){
-        console.log("Cuota a abonar de: $"+cuotasFinales+" por el valor de la unidad.");
-    }
-    else {
+function guardarVehiculoHistorial  (vehiculoAlmacenado)  {
+    arrayHistorial.push(vehiculoAlmacenado);
+    console.log(arrayHistorial);
+    let arrayJSON = JSON.stringify(arrayHistorial)
+    localStorage.setItem("historial", arrayJSON);
+    pintarHistorial(arrayHistorial);
+};
 
-        /* Oferta por abonar de contado */
+function pintarHistorial(arrayHistorial){
+    const historial = document.getElementById("listadoHistorial");
+    const div = document.createElement("div");
+    historial.innerHTML = ` `
+    arrayHistorial.forEach(vehiculo => {
+        div.classList.add("elementoHistorial");
+        div.classList.add("mx-auto");
+        div.innerHTML +=`<p>${vehiculo.marca} ${vehiculo.modelo} MOD. ${vehiculo.anio} $${new Intl.NumberFormat('es-AR').format(vehiculo.precio)}</p>`
+        historial.appendChild(div);
+    })
+} 
 
-        vehiculo.precio = vehiculo.precio*descuentoContado;
-        console.log("Precio oferta contado unidad: $"+vehiculo.precio);
-    }
-    if(precioSeguro!=0){
-        console.log("Valor seguro contra todo riesgo: $"+precioSeguro);
-    }
-    alert("Un asesor se pondrá en contacto con usted. Gracias por su compra♥");
+
+
+
+function obtenerHistorialStorage(){
+    const historialStorage = JSON.parse(localStorage.getItem("historial"));
+    return historialStorage;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    let arrayHistorial = obtenerHistorialStorage();
+    pintarHistorial(arrayHistorial);
+
+})
